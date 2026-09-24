@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AcroMap — Lexique LabCyber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f7fa; --card:#ffffff; --text:#0d0d10; --sub:#5c5c66;
+  --accent:#5B3EF0; --accent-soft:#ece7fc; --border:#e6e5ec;
+  --chip:#efedf7; --chip-active:#5B3EF0; --chip-active-text:#fff;
+  --fav:#e0863f;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f0f13; --card:#1a1a20; --text:#f2f1f6; --sub:#a3a1ad;
+    --accent:#8f7bff; --accent-soft:#25203f; --border:#2b2a33;
+    --chip:#232229; --chip-active:#8f7bff; --chip-active-text:#0f0f13;
+    --fav:#e6a15c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f0f13; --card:#1a1a20; --text:#f2f1f6; --sub:#a3a1ad;
+  --accent:#8f7bff; --accent-soft:#25203f; --border:#2b2a33;
+  --chip:#232229; --chip-active:#8f7bff; --chip-active-text:#0f0f13;
+  --fav:#e6a15c;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px); height:100%;}
+*{box-sizing:border-box;}
+body{
+  margin:0; height:100%; background:var(--bg); color:var(--text);
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  display:flex; flex-direction:column;
+}
+header{
+  padding:calc(env(safe-area-inset-top,0px)+16px) 16px 12px;
+  background:var(--card); border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:5;
+}
+h1{margin:0 0 2px; font-size:1.4rem; font-weight:800; letter-spacing:-0.01em; text-transform:lowercase; color:var(--text);}
+h1 .hi{color:var(--accent);}
+.sub{color:var(--sub); font-size:0.85rem; margin:0 0 12px; font-weight:600;}
+.search-wrap{position:relative;}
+#search{
+  width:100%; padding:11px 40px 11px 14px; border-radius:12px;
+  border:1px solid var(--border); background:var(--bg); color:var(--text);
+  font-size:1rem; outline:none;
+}
+#search:focus{border-color:var(--accent);}
+.clear-btn{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:var(--sub); font-size:1.1rem; cursor:pointer;
+  padding:6px; display:none; line-height:1;
+}
+.tabs{
+  display:flex; gap:6px; overflow-x:auto; margin-top:10px; padding-bottom:2px;
+  -ms-overflow-style:none; scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.chip{
+  flex:0 0 auto; padding:6px 12px; border-radius:20px; background:var(--chip);
+  color:var(--text); font-size:0.82rem; font-weight:700; border:none; cursor:pointer;
+  white-space:nowrap;
+}
+.chip.active{background:var(--chip-active); color:var(--chip-active-text);}
+.game-toggle{
+  margin-top:10px; width:100%; padding:10px; border-radius:12px; border:none;
+  background:var(--accent); color:#fff; font-weight:700; font-size:0.88rem; cursor:pointer;
+}
+.game-view{padding:6px 2px 10px;}
+.game-card{
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:20px 16px; display:flex; flex-direction:column; gap:14px;
+}
+.game-score{color:var(--sub); font-size:0.82rem; font-weight:700;}
+.game-label{color:var(--sub); font-size:0.85rem;}
+.game-def{font-size:1.5rem; font-weight:800; color:var(--accent); line-height:1.3;}
+.game-masked{
+  font-family:'Courier New',monospace; font-size:1rem; letter-spacing:1px; color:var(--sub);
+  line-height:1.5; word-break:break-word;
+}
+.game-hint{
+  align-self:flex-start; padding:7px 12px; border-radius:8px; border:1px solid var(--accent);
+  background:var(--accent-soft); color:var(--accent); font-weight:700; font-size:0.8rem; cursor:pointer;
+}
+.game-hint[disabled]{opacity:0.45; cursor:default;}
+.game-input{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+  background:var(--bg); color:var(--text); font-family:inherit; font-size:0.92rem; resize:none;
+}
+.game-answer{
+  padding:12px 14px; border-radius:10px; background:var(--accent-soft); color:var(--text);
+  font-size:0.95rem; font-weight:600; line-height:1.4;
+}
+.game-know, .game-dont{
+  flex:1; padding:9px 14px; border-radius:10px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer;
+}
+.game-know{background:#1e7e42; color:#fff;}
+.game-dont{background:#b3423a; color:#fff;}
+.game-actions{display:flex; gap:10px; flex-wrap:wrap;}
+.game-next{
+  padding:9px 16px; border-radius:10px; border:none; background:var(--accent); color:#fff;
+  font-weight:700; font-size:0.88rem; cursor:pointer;
+}
+.game-quit{
+  padding:9px 16px; border-radius:10px; border:1px solid var(--border); background:var(--card);
+  color:var(--sub); font-weight:600; font-size:0.85rem; cursor:pointer;
+}
+main{flex:1; overflow-y:auto; padding:10px 16px 24px;}
+.count{color:var(--sub); font-size:0.8rem; margin:6px 2px 10px;}
+ul#list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
+li.entry{
+  background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:12px 14px; display:flex; gap:10px; align-items:flex-start;
+}
+.entry-main{flex:1; min-width:0;}
+.acro{font-weight:800; color:var(--accent); font-size:1rem;}
+.def{color:var(--text); font-size:0.92rem; margin-top:2px; line-height:1.35;}
+.fr{color:var(--sub); font-size:0.82rem; margin-top:4px; font-style:italic;}
+mark{background:var(--accent-soft); color:var(--text); border-radius:3px; padding:0 1px;}
+.fav-btn{
+  background:none; border:none; cursor:pointer; font-size:1.2rem; color:var(--border);
+  padding:2px 4px; flex:0 0 auto;
+}
+.fav-btn.active{color:var(--fav);}
+.empty{color:var(--sub); text-align:center; padding:40px 20px; font-size:0.95rem;}
+footer{
+  padding:10px 16px calc(env(safe-area-inset-bottom,0px)+10px); text-align:center;
+  color:var(--sub); font-size:0.72rem; border-top:1px solid var(--border); background:var(--card);
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>acro<span class="hi">map</span></h1>
+  <p class="sub">Lexique bilingue d'acronymes du LabCyber — 605 entrées</p>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Chercher un acronyme ou une définition…" autocomplete="off">
+    <button class="clear-btn" id="clearBtn" aria-label="Effacer">✕</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <button id="gameToggle" class="game-toggle">🎲 Deviner un acronyme</button>
+</header>
+<main>
+  <div class="count" id="count"></div>
+  <ul id="list"></ul>
+  <div class="empty" id="empty" style="display:none;">Aucun résultat trouvé.</div>
+  <div id="gameView" class="game-view" style="display:none;">
+    <div class="game-card">
+      <div class="game-score" id="gameScore"></div>
+      <div class="game-label">Que signifie cet acronyme ? Essayez de le développer :</div>
+      <div class="game-def" id="gameDef"></div>
+      <div class="game-masked" id="gameMasked"></div>
+      <button id="gameHint" class="game-hint">💡 Indice (une lettre)</button>
+      <textarea id="gameInput" class="game-input" rows="2" placeholder="Votre réponse (optionnel, pour vous aider à réfléchir)…"></textarea>
+      <button id="gameReveal" class="game-next">Voir la réponse</button>
+      <div id="gameAnswer" class="game-answer" style="display:none;"></div>
+      <div id="gameSelfScore" class="game-actions" style="display:none;">
+        <button id="gameKnew" class="game-know">✅ Je savais</button>
+        <button id="gameDidnt" class="game-dont">❌ Je ne savais pas</button>
+      </div>
+      <div class="game-actions">
+        <button id="gameNext" class="game-next" style="display:none;">Suivant →</button>
+        <button id="gameQuit" class="game-quit">Quitter le jeu</button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Extrait de la carte XMind « Lexique bilingue d'acronymes du LabCyber »</footer>
+
+<script>
+const ENTRIES = [{"a": "ACL", "d": "Access Control List"}, {"a": "AD", "d": "Active Directory"}, {"a": "ADB", "d": "Android Debug Bridge"}, {"a": "AES", "d": "Advanced Encryption Standard"}, {"a": "AEV", "d": "Adversial Exposure Validation"}, {"a": "AFNIC", "d": "Association Française pour le Nommage Internet en Coopération"}, {"a": "AHB", "d": "Advanced High-performance Bus"}, {"a": "AIARE", "d": "AI-assisted Reverse Engineering"}, {"a": "AIBOM", "d": "AI BOM"}, {"a": "AKE", "d": "Authenticated Key Exchange"}, {"a": "ANFR", "d": "Agence Nationale des FRéquences"}, {"a": "ANSSI", "d": "Agence Nationale de la Sécurité des Systèmes d'Information"}, {"a": "AOS", "d": "Acquisition Of Signal"}, {"a": "AP", "d": "Access Point"}, {"a": "APB", "d": "Advanced Peripheral Bus"}, {"a": "APDU", "d": "Application Protocol Data Unit"}, {"a": "API", "d": "Application Programming Interface"}, {"a": "API", "d": "Automate Programmable Industriel"}, {"a": "APT", "d": "Advanced Persistent Threat"}, {"a": "ARCEP", "d": "Autorité de Régulation des Communications Electroniques, des Postes et de la distribution de la Presse"}, {"a": "ARM", "d": "Advanced RISC Machines"}, {"a": "ARP", "d": "Address Resolution Protocol"}, {"a": "ASIC", "d": "Application-Sspecific Integrated Circuit"}, {"a": "ASSP", "d": "Application Specific Standard Product"}, {"a": "AST", "d": "Application Security Testing"}, {"a": "ATO", "d": "Account Take Over"}, {"a": "ATPG", "d": "Automatic Test Pattern Generation"}, {"a": "ATT&CK", "d": "Adversarial Tactics, Techniques, and Common Knowledge"}, {"a": "AUP", "d": "Acceptable Use Policy"}, {"a": "BAS", "d": "Breach & Attack Simulation"}, {"a": "BCSD", "d": "Binary Code Similarity Detection"}, {"a": "BEFTI", "d": "Brigade d'Enquêtes sur les Fraudes aux Technologies de l'Information"}, {"a": "BEREC", "d": "Body of European Regulators for Electronic Communications"}, {"a": "BGA", "d": "Ball Grid Array"}, {"a": "BGH", "d": "Big Game Hunting"}, {"a": "BI", "d": "Body Biasing Injection"}, {"a": "BIST", "d": "Built-In Self Test"}, {"a": "BITD", "d": "Base Industrielle et Technologique de Défense"}, {"a": "BLE", "d": "Bluetooth Low Energy"}, {"a": "BMC", "d": "Baseboard Management Controller"}, {"a": "BMC", "d": "Battery Management Controller"}, {"a": "BRCE", "d": "Brigade de Renseignement et Cyber-Electronique"}, {"a": "BUS", "d": "Bit Unitary System"}, {"a": "BUT", "d": "Board Under Test"}, {"a": "BYOD", "d": "Bring Your Own Device"}, {"a": "C&C", "d": "Command and Control"}, {"a": "C&C", "d": "Corrupt and Correct"}, {"a": "C2PA", "d": "Coalition for Content Provenance and Authenticity"}, {"a": "C3N", "d": "Centre de lutte contre les Criminalités numériques"}, {"a": "C4", "d": "Centre de Coordination des crises cyber"}, {"a": "CA", "d": "Certificate Authority"}, {"a": "CaaS", "d": "Crime as a Service"}, {"a": "CAN", "d": "Control Area Network"}, {"a": "CASB", "d": "Cloud Access Security Broker"}, {"a": "CATNC", "d": "Commandement à l'Appui Terrestre Numérique et Cyber"}, {"a": "CBOM", "d": "Cryptography Bill Of Material"}, {"a": "CC", "d": "Creative Common"}, {"a": "CCC", "d": "Chaos Computer Club"}, {"a": "CEA", "d": "Commissariat à l'énergie atomique et aux énergies alternatives"}, {"a": "CEF", "d": "Connecting Europe Facility"}, {"a": "CEFCys", "d": "Cercle des Femmes de la Cybersécurité"}, {"a": "CEM", "d": "Compatibilité Electromagnétique"}, {"a": "CEN", "d": "Comité Européen de Standardisation"}, {"a": "CEPD", "d": "Comité Européen de la Protection des Données"}, {"a": "CERT", "d": "Computer Emergency Response Team"}, {"a": "CESED", "d": "Centre d'Etudes de la Sécurité et de la Défense"}, {"a": "CESIN", "d": "Club des Experts de la Sécurité de l'Information et du Numérique"}, {"a": "CESTI", "d": "Centre d'Evaluation de la Sécurité des Technologies de l'Information"}, {"a": "CFG", "d": "Control Flow Graph"}, {"a": "CFI", "d": "Control Flow Integrity"}, {"a": "CFP", "d": "Call For Paper"}, {"a": "CFT", "d": "Cyber Founder Tour"}, {"a": "CHES", "d": "Cryptographic Hardware and Embedded Systems"}, {"a": "CIA", "d": "Confidentiality, Integrity, Availability"}, {"a": "CIEDS", "d": "Centre Interdisciplinaire d'Etudes pour la Defense et la Sécurité"}, {"a": "CIFRE", "d": "Convention Industrielle de Formation par la REcherche"}, {"a": "CII", "d": "Crédit Impôt Innovation"}, {"a": "CIR", "d": "Crédit Impôt Recherche"}, {"a": "CISO", "d": "Chief Information Security Officer"}, {"a": "CKC", "d": "Cyber Kill Chain"}, {"a": "CLI", "d": "Commmand Line Interface"}, {"a": "CLUSIF", "d": "Club de la Sécurité de l'Information Français"}, {"a": "CM", "d": "Contre-Mesure"}, {"a": "CMMC", "d": "Cybersecurity Maturity Model Certification"}, {"a": "CND", "d": "Commissariat au Numérique de Défense"}, {"a": "CNENum", "d": "Centre National d'Expertise Numérique"}, {"a": "CNRS", "d": "Centre National de la Recherche Scientifique"}, {"a": "COMCYBER", "d": "COMmandement de la CYBerdéfense"}, {"a": "COMSEC", "d": "Communication Security"}, {"a": "COP", "d": "Common Operation Picture"}, {"a": "COTS", "d": "Commercial Off-the-Shelf"}, {"a": "CPA", "d": "Correlation Power Analysis"}, {"a": "CPS", "d": "Cyber-Physical System"}, {"a": "CRA", "d": "Cyber Resilience Act"}, {"a": "CRAC", "d": "Centre de Recherche Avancée sur le Cyberespace"}, {"a": "CRP", "d": "Challenge-Response Pair"}, {"a": "CRT", "d": "Centre de Ressources Technologiques"}, {"a": "CRTO", "d": "Certified Red Team Operator"}, {"a": "CS", "d": "Chip Select"}, {"a": "CSF", "d": "Cloud Sovereignity Framework"}, {"a": "CSF", "d": "Comité Stratégique de Filière"}, {"a": "CSIRT", "d": "Computer Security Incident Response Team"}, {"a": "CSMS", "d": "CyberSecurity Management System"}, {"a": "CSPN", "d": "Certification de Sécurité de Premier Niveau"}, {"a": "CSR", "d": "Certificate Signing Request"}, {"a": "CSR", "d": "Control Status Register"}, {"a": "CT", "d": "Computed Tomography"}, {"a": "CTF", "d": "Capture The Flag"}, {"a": "CVD", "d": "Coordinated Vulnerability Disclosure"}, {"a": "CVE", "d": "Common Vulnerabilities and exposures"}, {"a": "CVM", "d": "Cloud Virtual Machine"}, {"a": "CWS", "d": "Common Weakness Enumeration"}, {"a": "DAB", "d": "Digital Audio Broadcasting"}, {"a": "DALI", "d": "Digital Addressable Lighting Interface"}, {"a": "DAO", "d": "Decentralized Autonomous Organization"}, {"a": "DAS", "d": "Débit d'Absorption Spécifique"}, {"a": "DCS", "d": "Distributed Control System"}, {"a": "DD", "d": "Data Diode"}, {"a": "DDOS", "d": "Distributed Denial Of Service"}, {"a": "DDR", "d": "Double Data Rate"}, {"a": "DEEE", "d": "Déchets d'équipements électriques et électroniques"}, {"a": "DFF", "d": "Data Flip-flop"}, {"a": "DFIR", "d": "Digital Forensics and Incident Response"}, {"a": "DFU", "d": "Device Firmware Update"}, {"a": "DG DIGIT", "d": "Directorate General for DIGITal services"}, {"a": "DGNUM", "d": "Direction Générale du Numérique et des Systèmes d'information et de communication"}, {"a": "DGRI", "d": "Direction Générale de la Recherche et de l'Innovation"}, {"a": "DGSI", "d": "Direction Générale de la Sécurité Intérieure"}, {"a": "DHCP", "d": "Dynamic Host Configuration Protocol"}, {"a": "DICOM", "d": "Digital Imaging and Communications"}, {"a": "DICP", "d": "Disponibilité, Intégrité, Confidentialité, Preuve"}, {"a": "DIMM", "d": "Dual Inline Memory Module"}, {"a": "DIN", "d": "Deutsches Institut für Normung"}, {"a": "DMA", "d": "Digital Markets Act"}, {"a": "DMA", "d": "Direct Memory Access"}, {"a": "DMS", "d": "Data Management System"}, {"a": "DMZ", "d": "Demilitarized Zone"}, {"a": "DNP", "d": "Distributed Network Protocol"}, {"a": "DNP", "d": "Do Not Populate"}, {"a": "DNS", "d": "Domain Name System"}, {"a": "DOI", "d": "Digital Object Identifier"}, {"a": "DOM", "d": "Domain Oriented Masking"}, {"a": "DOS", "d": "Denial of Service"}, {"a": "DPI", "d": "Digital Public Infrastructure"}, {"a": "DPO", "d": "Data Policy Officer"}, {"a": "DPP", "d": "Digital Product Passport"}, {"a": "DRAM", "d": "Dynamic Random Access Memory"}, {"a": "DRC", "d": "Design Rule Check"}, {"a": "DRM", "d": "Digital Rights Management"}, {"a": "DSA", "d": "Digital Services Act"}, {"a": "DUT", "d": "Device Under Test"}, {"a": "DVID", "d": "Damn Vulnerable IoT Device"}, {"a": "E2EE", "d": "End to End Encryption"}, {"a": "E3R", "d": "Endiguement Eviction Eradication Reconstruction"}, {"a": "EAL", "d": "Evaluation Assurance Level"}, {"a": "EAN", "d": "European Article Number"}, {"a": "EBIOS", "d": "Etude des Besoins et Identification des Objectifs de Sécurité"}, {"a": "eBPF", "d": "extended Berkeley Packet Filter"}, {"a": "ECB", "d": "Electronic Code Book"}, {"a": "ECC", "d": "Elliptic Curve Cryptography"}, {"a": "ECC", "d": "Error Code Correction"}, {"a": "ECDH", "d": "Elliptic-Curve Diffie-Hellman"}, {"a": "ECHO", "d": "European network of Cyber Security centers and competence Hub for Innovation and Operations"}, {"a": "ECSO", "d": "European Cyber Security Organization"}, {"a": "ECU", "d": "Electronic Control Unit"}, {"a": "EDA", "d": "Electronic Design Automation"}, {"a": "EDA", "d": "European Defence Agency"}, {"a": "EDIC", "d": "European Digital Infrastructure Consortiums"}, {"a": "EDIH", "d": "European Digital Innovation Hubs"}, {"a": "EDR", "d": "Endpoint Detection and Response"}, {"a": "EE", "d": "Entité Essentielle"}, {"a": "EEBUS", "d": "Electric Energy BUS"}, {"a": "EEPROM", "d": "Electrically Erasable Programmable Read Only Memory"}, {"a": "EI", "d": "Entité Importante"}, {"a": "eIDAS", "d": "electronic IDentification Authentification and trust Services"}, {"a": "EJCN", "d": "European Judicial Cybercrime Network"}, {"a": "ELISA", "d": "Enabling Linux in Safety Applications"}, {"a": "EMFI", "d": "Electromagnetic Fault Injection"}, {"a": "EMP", "d": "ElectroMagnetic Pulse"}, {"a": "EN", "d": "European Norm"}, {"a": "ENF", "d": "Electric Network Frequency"}, {"a": "EOL", "d": "End Of Life"}, {"a": "EPSS", "d": "Exploit Prediction Scoring System"}, {"a": "ERCy", "d": "Escadron de Réserver de Cyberdéfense"}, {"a": "ESD", "d": "ElectroStatic Discharge"}, {"a": "ESL", "d": "Electronic Shelf Label"}, {"a": "ESMC", "d": "European Semiconductor Manufacturing Company"}, {"a": "ESN", "d": "Entreprise de Services du Numérique"}, {"a": "ESPR", "d": "Ecodesign for Sustainable Product Regulation"}, {"a": "ESR", "d": "Enseignement Supérieur et Recherche"}, {"a": "ESTM", "d": "Embedded Systmes Threat Matrix"}, {"a": "ETSI", "d": "European Telecommunications Standards Institut"}, {"a": "EUCA", "d": "European Cyber Acts"}, {"a": "EUCC", "d": "European Common Cybersecurity Certification"}, {"a": "EUPL", "d": "European Union Public Licence"}, {"a": "FAI", "d": "Fournisseur d'Accès Internet"}, {"a": "FAT", "d": "File Allocation Table"}, {"a": "FCCID", "d": "Federal Communications Commission Identifier"}, {"a": "FD-SOI", "d": "Fully Depleted Silicon On Insulator"}, {"a": "FFI", "d": "Friend or Foe Identification"}, {"a": "FHE", "d": "Flexible Hybrid Electronics"}, {"a": "FHE", "d": "Fully Homomorphic Encryption"}, {"a": "FIDO", "d": "Fast IDentity Online"}, {"a": "FIFO", "d": "First In First Out"}, {"a": "FOTA", "d": "Firmware Over The Air"}, {"a": "FPCB", "d": "Flexible Printed Circuit Board"}, {"a": "FPGA", "d": "Field-Programmable Gate Array"}, {"a": "FTTH", "d": "Fiber To The Home"}, {"a": "FW", "d": "FireWall"}, {"a": "GAP", "d": "Generic Access Profile"}, {"a": "GATT", "d": "Generic ATTribute profile"}, {"a": "GDPR", "d": "General Data Protection Regulation"}, {"a": "GDSII", "d": "Graphic Design System II"}, {"a": "GIP", "d": "Groupement d'Interêt Public"}, {"a": "GNSS", "d": "Global Navigation Satellite System"}, {"a": "GPG", "d": "GNU Privacy Guard"}, {"a": "GPIO", "d": "General Purpose Input/Output"}, {"a": "GPL", "d": "General Public Licence"}, {"a": "GPML", "d": "Graph Processing for Machine Larning"}, {"a": "GPNVM", "d": "General Purpose Non Volatile Memory"}, {"a": "GPON", "d": "Gigabit-capable Passive Optical Network"}, {"a": "GPOS", "d": "General Purpose Operating System"}, {"a": "GPP", "d": "General Purpose Processor"}, {"a": "GPRS", "d": "General Purpose Radio Service"}, {"a": "GPU", "d": "Graphics Processing Unit"}, {"a": "HAL", "d": "Hardware Abstraction Layer"}, {"a": "HART", "d": "Highway Addressable Remote Transducer"}, {"a": "HAVEGE", "d": "HArdware Volatile Entropy Gathering and Expansion"}, {"a": "HBM", "d": "High Bandwidth Memory"}, {"a": "HBOM", "d": "Hardware Bill Of Material"}, {"a": "HD", "d": "Hamming Distance"}, {"a": "HDD", "d": "Hard Disk Drive"}, {"a": "HDI", "d": "High Density Interconnexion"}, {"a": "HDL", "d": "Hardware Description Language"}, {"a": "hEN", "d": "harmonized European Norm"}, {"a": "HID", "d": "Human Interface Device"}, {"a": "HIL", "d": "Hardware In The Loop"}, {"a": "HMAC", "d": "Hash-Based Message Authentification Code"}, {"a": "HMI", "d": "Human Machine Interface"}, {"a": "HNDL", "d": "Harvest Now Decrypt Later"}, {"a": "HRNG", "d": "Hardware Random Number Generator"}, {"a": "HRT", "d": "Hardware Root of Trust"}, {"a": "HS3", "d": "Hardware Supported Software Security"}, {"a": "HSM", "d": "Hardware Security Module"}, {"a": "HT", "d": "Hardware Troyan"}, {"a": "HTML", "d": "Hypertext Markup Language"}, {"a": "HTTPS", "d": "HyperText Transfer Protocol Secure"}, {"a": "HW", "d": "Hamming Weight"}, {"a": "HWIFI", "d": "Hardware Implemented Fault Injection"}, {"a": "IAAS", "d": "Infrastructure As A Service"}, {"a": "IaC", "d": "Infrastructure as Code"}, {"a": "IACS", "d": "Industrial Automation Control System"}, {"a": "IANA", "d": "Internet Assignation Numbers Authority"}, {"a": "IBN", "d": "Internet Background Noise"}, {"a": "IC", "d": "Integrated Circuit"}, {"a": "ICS", "d": "Industrial Control System"}, {"a": "IDE", "d": "Integrated Development Environment"}, {"a": "IDM", "d": "Integrated Device Manufacturer"}, {"a": "IEC", "d": "International Electrotechnical Commission"}, {"a": "IED", "d": "Intelligent Electronic Device"}, {"a": "IEEE", "d": "Institute of Electrical and Electronics Engineers"}, {"a": "IEM", "d": "Impulsion ElectroMagnétique"}, {"a": "IIC", "d": "Inter Integrated Circuit"}, {"a": "IIoT", "d": "Industrial Internet Of Things"}, {"a": "IMINT", "d": "Image Intelligence"}, {"a": "IMSI", "d": "International Mobile Subscriber Identity"}, {"a": "INESIA", "d": "Institut National d'Evaluation et de la Sécurité de l'Intelligence Artificielle"}, {"a": "INRIA", "d": "Institut national de Recherche en Informatique et Automatique"}, {"a": "IOC", "d": "Indicator of Compromise"}, {"a": "IOT", "d": "Internet Of Things"}, {"a": "IP", "d": "Instruction Pointer"}, {"a": "IP", "d": "Intellectual Property"}, {"a": "IP", "d": "Internet Protocol"}, {"a": "IPAM", "d": "IP Adress Manager"}, {"a": "IPCEI", "d": "Important Project of Common European Interest"}, {"a": "IPS", "d": "Intrusion Prevention System"}, {"a": "IRIS", "d": "Infrared In-Situ Imaging"}, {"a": "IRM", "d": "Incident Response Management"}, {"a": "IRN", "d": "Indice de Résilience Numérique"}, {"a": "ISA", "d": "Instruction Set Architecture"}, {"a": "ISN", "d": "Investigation sur Supports Numérique"}, {"a": "ISRG", "d": "Internet Security Research Group"}, {"a": "ISSM", "d": "Information Systems Security Manager"}, {"a": "IT", "d": "Information Technology"}, {"a": "ITSEC", "d": "Information Technology Security Evaluation Criteria"}, {"a": "ITSEF", "d": "Information Technology Security Evaluation Facility"}, {"a": "ITU", "d": "International Telecommunication Union"}, {"a": "IV", "d": "Initialization Vector"}, {"a": "JFAC", "d": "Joint Federated Assurance Center"}, {"a": "JIL", "d": "Joint Interpretation Library"}, {"a": "JTAG", "d": "Joint Test Action Group"}, {"a": "KDC", "d": "Key Distribution Center"}, {"a": "KDF", "d": "Key Derivation Function"}, {"a": "KEV", "d": "Known Exploited Vulnaribilities"}, {"a": "KVM", "d": "Kernel-based Virtual Machine"}, {"a": "KVM", "d": "Keyboard - Video - Mouse"}, {"a": "L2I", "d": "Lutte Informationnelle d'Influence"}, {"a": "LAN", "d": "Local Area Network"}, {"a": "LDAP", "d": "Lightweight Directory Access Protocol"}, {"a": "LDO", "d": "Low Drop Out"}, {"a": "LEA", "d": "Law Enforcement Agency"}, {"a": "LFI", "d": "Laser Fault Injection"}, {"a": "LGA", "d": "Land Grid Array"}, {"a": "LID", "d": "Lutte Informationnelle Défensive"}, {"a": "LiFi", "d": "Light Fidelity"}, {"a": "LIFO", "d": "Last In First Out"}, {"a": "LIOP", "d": "LIO privée"}, {"a": "LLM", "d": "Large Language Model"}, {"a": "LNA", "d": "Low Noise Amplifier"}, {"a": "LOA", "d": "Level of Assurance"}, {"a": "LSB", "d": "Least Significant Bit"}, {"a": "LUT", "d": "LookUp Table"}, {"a": "LVD", "d": "Low Voltage Directive"}, {"a": "MAC", "d": "Media Access Control"}, {"a": "MAC", "d": "Message Authentification Code"}, {"a": "MAN", "d": "Metropolitan Area Network"}, {"a": "MANET", "d": "Mobile Ad-hoc NETwork"}, {"a": "MCP", "d": "Model Context Protocol"}, {"a": "MCS", "d": "Maintien en Conditions de Sécurité"}, {"a": "MCU", "d": "Microcontroller Unit"}, {"a": "MDM", "d": "Mobile Device Management"}, {"a": "MDR", "d": "Managed Detection and Response"}, {"a": "MES", "d": "Manufacturing Execution System"}, {"a": "MFA", "d": "Multifactor Authentification"}, {"a": "MFT", "d": "Managed File Transfer"}, {"a": "MHS", "d": "Model Hardware Standard"}, {"a": "MILS", "d": "Multiple Independent Levels of Security"}, {"a": "MIoT", "d": "Medical IoT"}, {"a": "MIPS", "d": "Microprocessor without Interlocked Pipeline Stages"}, {"a": "ML-DSA", "d": "Module-Lattice Digital Signature Algorithm"}, {"a": "MMU", "d": "Memory Management Unit"}, {"a": "MOA", "d": "Mode Opératoire d'Attaque"}, {"a": "MOI", "d": "Mode Opératoire Informationnel"}, {"a": "MOQ", "d": "Minimum Order Quantity"}, {"a": "MOSFET", "d": "Metal-Oxide-Semiconductor Field-Effect Transistor"}, {"a": "MPC", "d": "Multi Party Computation"}, {"a": "MPN", "d": "Manufacturer Part Number"}, {"a": "MPU", "d": "Memory Protection Unit"}, {"a": "MPW", "d": "Multiple Project Wafer"}, {"a": "MQTT", "d": "Message Queuing Telemetry Transport"}, {"a": "MR", "d": "Machinery Regulation"}, {"a": "MSO", "d": "Mixed-Signal Oscilloscope"}, {"a": "MSSP", "d": "Managed Security Service Provider"}, {"a": "MTLS", "d": "Mutual TLS"}, {"a": "MTTD", "d": "Mean Time To Detect"}, {"a": "MTTR", "d": "Mean Time To Respond"}, {"a": "MUX", "d": "MUltipleXeur"}, {"a": "NAS", "d": "Network Attached Storage"}, {"a": "NAT", "d": "Network Address Translation"}, {"a": "NDA", "d": "Non Disclosure Agreement"}, {"a": "NDR", "d": "Network Detection and Response"}, {"a": "NEAT", "d": "Non-bypassable Evaluatable Always-invoked Tamperproof"}, {"a": "NFC", "d": "Near-Field Communication"}, {"a": "NIDS", "d": "Network Intrusion Detection System"}, {"a": "NIS", "d": "Network and Information Security"}, {"a": "NMOS", "d": "N-Channel MOSFET"}, {"a": "NPU", "d": "Neural Processing Unit"}, {"a": "NTP", "d": "Network Time Protocol"}, {"a": "NVRAM", "d": "Non Volatile RAM"}, {"a": "NWK", "d": "Network Encryption Key"}, {"a": "NX", "d": "No-Execute"}, {"a": "OA", "d": "Open Access"}, {"a": "OBD", "d": "On-Board Diagnostic"}, {"a": "OCD", "d": "On-Chip Debugger"}, {"a": "ODBL", "d": "Open DataBase Licence"}, {"a": "ODC", "d": "Observability Don't Care"}, {"a": "OEF", "d": "Open EU Foundries"}, {"a": "OIV", "d": "Operateur d'Importance Vitale"}, {"a": "OLE", "d": "Object Linked & Embeded"}, {"a": "ON", "d": "Organisme Notifié"}, {"a": "ONR", "d": "Organisme National de Recherche"}, {"a": "OOB", "d": "Out Of Boundary"}, {"a": "OPCUA", "d": "OPen Connectivity Unified Architecture"}, {"a": "OPSEC", "d": "Operations Security"}, {"a": "OSAT", "d": "Outsourced Semiconductor Assembly and Test"}, {"a": "OSCP", "d": "Offensive Security Certified Professionnal"}, {"a": "OSI", "d": "Open Source Initiative"}, {"a": "OSI", "d": "Open Systems Interconnection"}, {"a": "OSINT", "d": "Open Source Intelligence"}, {"a": "OSPO", "d": "Open Source Program Office"}, {"a": "OSS", "d": "Open-Source Stewart"}, {"a": "OSSTMM", "d": "Open Source Security Testing Methodology Manual"}, {"a": "OT", "d": "Operational Technology"}, {"a": "OTA", "d": "Over The Air"}, {"a": "OTP", "d": "One-Time Pad"}, {"a": "OTP", "d": "One-Time Password"}, {"a": "OTP", "d": "One-Time Programmable"}, {"a": "OWA", "d": "One Way Appliance"}, {"a": "OWASP", "d": "Open Worldwide Application Security Project"}, {"a": "PACS", "d": "Picture Archiving and Communication System"}, {"a": "PAN", "d": "Personal Area Network"}, {"a": "PASSI", "d": "Prestataire d'Audit de la Sécurité des Systèmes d’Information"}, {"a": "PASTA", "d": "Press Attack Simulation and Threat Analysis"}, {"a": "PCA", "d": "Plan de continuité d'activité"}, {"a": "PCAP", "d": "Packet Capture"}, {"a": "PCB", "d": "Printed Circuit Board"}, {"a": "PCBA", "d": "Printed Circuit Board Assembly"}, {"a": "PCI", "d": "Peripheral Component Interconnect"}, {"a": "PCMA", "d": "Printed Circuit Module Assembly"}, {"a": "PCR", "d": "Platform Configuration Registers"}, {"a": "PCROP", "d": "Proprietary Code Read-Out Protection"}, {"a": "PD", "d": "Partial Discharge"}, {"a": "PDE", "d": "Product with Digital Elements"}, {"a": "PDU", "d": "Protocol Data Unit"}, {"a": "PEC", "d": "Pôle d'Excellence Cyber"}, {"a": "PEPR", "d": "Programmes et Equipements Prioritaires de Recherche"}, {"a": "PERA", "d": "Purdue Entreprise Reference Architecture"}, {"a": "PEReN", "d": "Pôle d'Expertise à la Régulation Numérique"}, {"a": "PET", "d": "Privacy Enhancing Technologies"}, {"a": "PFS", "d": "Perfect Forward Secrecy"}, {"a": "PGP", "d": "Pretty Good Privacy"}, {"a": "PICA", "d": "Pica-second Imaging Circuit Analysis"}, {"a": "PID", "d": "Proportionnal - Integral -Derivative"}, {"a": "PID", "d": "Pôle Innovation Défense"}, {"a": "PIM", "d": "Processing in Memory"}, {"a": "PIN", "d": "Personal Identification Number"}, {"a": "PJGN", "d": "Pôle Judiciaire de la Gendarmerie Nationale"}, {"a": "PKCS", "d": "Public Key Cryptographic Standard"}, {"a": "PKI", "d": "Public Key Infrastructure"}, {"a": "PLC", "d": "Power Line Communication"}, {"a": "PLC", "d": "Programmable Logic Controller"}, {"a": "PLD", "d": "Programmable Logical Device"}, {"a": "PoP", "d": "Point of Presence"}, {"a": "POSIX", "d": "Portable OS Interface"}, {"a": "PoW", "d": "Proof Of Work"}, {"a": "PP", "d": "Protection Profile"}, {"a": "PPS", "d": "Pulse Per Second"}, {"a": "PPU", "d": "Probabilistic Processing Unit"}, {"a": "PQ", "d": "Post Quantum"}, {"a": "PQR", "d": "Post-Quantum Resilience"}, {"a": "PRA", "d": "Plan de Reprise d'Activité"}, {"a": "PReF", "d": "Physically Related Function"}, {"a": "PT", "d": "Penetration Testing"}, {"a": "PTES", "d": "Penetration Testing Execution Standard"}, {"a": "PtH", "d": "Pass the Hash"}, {"a": "PUF", "d": "Physical Unclonable Function"}, {"a": "PUI", "d": "Pôle Universitaire d'Innovation"}, {"a": "PwDE", "d": "Product with Digital Elements"}, {"a": "QFN", "d": "Quad Flat No-Lead"}, {"a": "QKD", "d": "Quantum Key Distribution"}, {"a": "QRCode", "d": "Quick Response Code"}, {"a": "RAG", "d": "Retrieval-Augmented Generation"}, {"a": "RAID", "d": "Redundant Array of Independent Disks"}, {"a": "RAM", "d": "Random Access Memory"}, {"a": "RAMBO", "d": "Radiation of Air-gapped Memory Bus for Offense"}, {"a": "RBAC", "d": "Role-Based Access Control"}, {"a": "RBI", "d": "Remote Browser Isolation"}, {"a": "RCE", "d": "Remote Code Execution"}, {"a": "RCS", "d": "Rich Communication Services"}, {"a": "RDL", "d": "Redistribution Layer"}, {"a": "RDP", "d": "Readout Protection"}, {"a": "REPL", "d": "Read Eval Print Loop"}, {"a": "RFB", "d": "Remote Frame Buffer"}, {"a": "RFID", "d": "RadioFrequency Identification"}, {"a": "RISC", "d": "Reduced Instruction Set Computer"}, {"a": "RO", "d": "Ring Oscillator"}, {"a": "ROC", "d": "Renseignement d'Origine Cyber"}, {"a": "ROE", "d": "Rule Of Engagement"}, {"a": "ROHS", "d": "Restriction of Hazardous Substances in Electrical and Electronic Equipment"}, {"a": "ROM", "d": "Read Only Memory"}, {"a": "ROP", "d": "Return-Oriented Programming"}, {"a": "ROT", "d": "Root Of Trust"}, {"a": "RPC", "d": "Remote Procedure Call"}, {"a": "RPi", "d": "Raspberry"}, {"a": "RPKI", "d": "Resource Public Key Infrastructure"}, {"a": "RSA", "d": "Rivest–Shamir–Adleman public-key cryptosystem"}, {"a": "RSSI", "d": "Received Signal Strength Indicator"}, {"a": "RSSI", "d": "Responsable Sécurité des Systèmes d'Informations"}, {"a": "RTFM", "d": "Read The F** Manual"}, {"a": "RTL", "d": "Register Transfer Level"}, {"a": "RTO", "d": "Research & Technology Organization"}, {"a": "RTSP", "d": "Real Time Streaming Protocol"}, {"a": "RUO", "d": "Research Use Only"}, {"a": "SAN", "d": "Storage Area Network"}, {"a": "SAR", "d": "Security Assurance Requirements"}, {"a": "SAST", "d": "Static Application Security Testing"}, {"a": "SAT", "d": "SATisfiability"}, {"a": "SAT", "d": "Security Awareness Training"}, {"a": "SATA", "d": "Serial Advanced Technology Attachment"}, {"a": "SBC", "d": "Single-Board Computer"}, {"a": "SBD", "d": "Secured By Design"}, {"a": "SBO", "d": "Security By Obscurity"}, {"a": "SBOM", "d": "Software Bill Of Material"}, {"a": "SCA", "d": "Side Channel Attack"}, {"a": "SCA", "d": "Software Composition Analysis"}, {"a": "SCADA", "d": "Supervisory Control and Data Acquisition"}, {"a": "SCL", "d": "Serial Clock"}, {"a": "SD", "d": "Secure Digital"}, {"a": "SDA", "d": "Serial Data"}, {"a": "SDC", "d": "Satisfiability Dont Care"}, {"a": "SDN", "d": "Software Defined Network"}, {"a": "SDR", "d": "Software Defined Radio"}, {"a": "SDV", "d": "Software Defined Vehicule"}, {"a": "SE", "d": "Secure Elements"}, {"a": "SED", "d": "Service d'Expérimentation et Développement (IINRIA)"}, {"a": "SEIG", "d": "Service Economique d'Intérêt Général"}, {"a": "SESIP", "d": "Security Evaluation Standard for IoT Platforms"}, {"a": "SET", "d": "Single Event Transient"}, {"a": "SEU", "d": "Single Event Upset"}, {"a": "SF", "d": "Security Function"}, {"a": "SFR", "d": "Security Functional Requirements"}, {"a": "SGX", "d": "Software Guard eXtensions"}, {"a": "SHA", "d": "Secure Hash Algorithm"}, {"a": "SHAP", "d": "SHapley Additive exPlanation"}, {"a": "SIEM", "d": "Security Information and Event Management"}, {"a": "SIGINT", "d": "SIGnal INTelligence"}, {"a": "SILL", "d": "Socle Interministériel des Logiciels Libres"}, {"a": "SIM", "d": "Subscriber Identity Module"}, {"a": "SIP", "d": "System in Package"}, {"a": "SISSE", "d": "Service de l'Information Stratégique et de la sécurité économique (DGE)"}, {"a": "SKU", "d": "Stock Keeping Unit"}, {"a": "SMA", "d": "SubMiniature Version A"}, {"a": "SML", "d": "Small Langage Model"}, {"a": "SMPC", "d": "Secured MPC"}, {"a": "SoA", "d": "State of the Art"}, {"a": "SOAR", "d": "Security Orchestration, Automation and Response"}, {"a": "SOC", "d": "Security Operation Center"}, {"a": "SOC", "d": "System On Chip"}, {"a": "SOIC", "d": "Small Outline IC"}, {"a": "SOK", "d": "Systematization Of Knowledge"}, {"a": "SOM", "d": "System On Module"}, {"a": "SOP", "d": "Small Outline Package"}, {"a": "SOTA", "d": "Secure Over The Air"}, {"a": "SPA", "d": "Simple Power Analysis"}, {"a": "SPAN", "d": "Switched Port ANalyser"}, {"a": "SPI", "d": "Serial Peripheral Interface"}, {"a": "SPIFFE", "d": "Secure Production Identity Framework For Everyone"}, {"a": "SPN", "d": "Substitution-Permutation Network"}, {"a": "SPOF", "d": "Single Point of Failure"}, {"a": "SQLi", "d": "SQL injection"}, {"a": "SR/OV", "d": "Source de Risques/Objectif Visé"}, {"a": "SRAM", "d": "Static Random Access Memory"}, {"a": "SRP", "d": "Singel Reporting Platform"}, {"a": "SSD", "d": "Solid State Drive"}, {"a": "SSH", "d": "Secure Shell"}, {"a": "SSID", "d": "Service Set IDentifier"}, {"a": "SSO", "d": "Stratégie de Science Ouverte"}, {"a": "SSP", "d": "Secure Secret Provisioning"}, {"a": "SSTV", "d": "Slow Scan TeleVision"}, {"a": "STRIDE", "d": "Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege"}, {"a": "STS", "d": "Science and Technology Studies"}, {"a": "SWD", "d": "Serial Wire Debug"}, {"a": "SWIFI", "d": "Software Implemented Fault Injection"}, {"a": "TAP", "d": "Test Access Point"}, {"a": "TARA", "d": "Threat Analysis and Risk Assessment"}, {"a": "TCB", "d": "Trusted Computing Base"}, {"a": "TCG", "d": "Trusted Computing Group"}, {"a": "TCP", "d": "Transmission Control Protocol"}, {"a": "TDX", "d": "Trust Domain eXtensions"}, {"a": "TEE", "d": "Trusted Execution Environments"}, {"a": "TEMPEST", "d": "Telecommunications Electronics Material Protected from Emanating Spurious Transmissions"}, {"a": "TGT", "d": "Ticket Granting Ticket"}, {"a": "TI", "d": "Test d'Intrusions"}, {"a": "TI", "d": "Threshold Implementation"}, {"a": "TLS", "d": "Transport Layer Security"}, {"a": "TOCTOU", "d": "Time of Check To Time of Use"}, {"a": "TOE", "d": "Target of Evaluation"}, {"a": "TOFU", "d": "Trust On First Use"}, {"a": "TOR", "d": "The Onion Router"}, {"a": "TOTP", "d": "Time-based One Time Password"}, {"a": "TPM", "d": "Trusted Platform Module"}, {"a": "TPRM", "d": "Third Party Risk Management"}, {"a": "TSC", "d": "Time Stamp Counter"}, {"a": "TSN", "d": "Time Sentitive Networking"}, {"a": "TSOP", "d": "Thin small Outline Package"}, {"a": "TTO", "d": "Technology Transfer Office"}, {"a": "TTP", "d": "Tactiques, techniques et procédures"}, {"a": "TUI", "d": "Terminal User Interface"}, {"a": "TVLA", "d": "Test Vector Leakage Assessment"}, {"a": "U2F", "d": "Universal Second Factor"}, {"a": "UART", "d": "Universal Asynchronous Receiver Transmitter"}, {"a": "UDI", "d": "Unique Device Identification"}, {"a": "UDP", "d": "User Datagram Protocol"}, {"a": "UDS", "d": "Unique Device Secret"}, {"a": "UMR", "d": "Unité Mixte de Recherche"}, {"a": "UPC", "d": "Universal Product Code"}, {"a": "URL", "d": "Uniform Resource Locator"}, {"a": "USB", "d": "Universal Serial BUS"}, {"a": "USRT", "d": "Universal Software Radio Peripheral"}, {"a": "UWB", "d": "Ultra Wide Band"}, {"a": "V&V", "d": "Validation & Vérification"}, {"a": "VCI", "d": "Voltage Contrast Imaging"}, {"a": "VFI", "d": "Voltage Fault Injection"}, {"a": "VM", "d": "Virtual Machine"}, {"a": "VNA", "d": "Vector Network Analysers"}, {"a": "VOC", "d": "Vulnerability Operations Center"}, {"a": "VPN", "d": "Virtual Private Network"}, {"a": "VPS", "d": "Virtual Private Server"}, {"a": "VPU", "d": "Visual Processing Unit"}, {"a": "VSAT", "d": "Very Small Aperture Terminal"}, {"a": "WAF", "d": "Web Application Firewall"}, {"a": "WAN", "d": "Wide Area Network"}, {"a": "WHAD", "d": "Wireless HAcking for Dummies"}, {"a": "WIFI", "d": "Wireless Fidelity"}, {"a": "WLAN", "d": "Wireless Local Area Network"}, {"a": "WLCFP", "d": "Wafer Level Chip Scale Package"}, {"a": "WORM", "d": "Write Once Read Many"}, {"a": "WRP", "d": "Write Protection"}, {"a": "XDR", "d": "Extended Detection and Response"}, {"a": "XML", "d": "eXtended Markup Language"}, {"a": "XOR", "d": "eXclusive OR"}, {"a": "XRM", "d": "X-Ray Microscopy"}, {"a": "XSS", "d": "Cross-Site Scripting"}, {"a": "ZRR", "d": "Zone à Régime Restrictif"}, {"a": "ZT", "d": "Zero Trust"}];
+</script>
+<script>
+let favorites = new Set();
+let activeFilter = 'ALL';
+let query = '';
+
+const listEl = document.getElementById('list');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+const searchEl = document.getElementById('search');
+const clearBtn = document.getElementById('clearBtn');
+const tabsEl = document.getElementById('tabs');
+
+function letters(){
+  const set = new Set(ENTRIES.map(e => e.a.charAt(0).toUpperCase()));
+  return Array.from(set).sort();
+}
+
+function buildTabs(){
+  const ls = letters();
+  const frag = [];
+  frag.push(chip('ALL', 'Tout'));
+  frag.push(chip('FAV', '★ Favoris'));
+  ls.forEach(l => frag.push(chip(l, l)));
+  tabsEl.innerHTML = frag.join('');
+  tabsEl.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.val;
+      render();
+    });
+  });
+}
+function chip(val, label){
+  return `<button class="chip" data-val="${val}">${label}</button>`;
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function highlight(text, q){
+  if(!q) return escapeHtml(text);
+  const esc = escapeHtml(text);
+  const idx = esc.toLowerCase().indexOf(q.toLowerCase());
+  if(idx === -1) return esc;
+  return esc.slice(0,idx) + '<mark>' + esc.slice(idx, idx+q.length) + '</mark>' + esc.slice(idx+q.length);
+}
+
+function matches(entry){
+  if(activeFilter === 'FAV'){
+    if(!favorites.has(entry.a + '|' + entry.d)) return false;
+  } else if(activeFilter !== 'ALL'){
+    if(entry.a.charAt(0).toUpperCase() !== activeFilter) return false;
+  }
+  if(query){
+    const q = query.toLowerCase();
+    return entry.a.toLowerCase().includes(q);
+  }
+  return true;
+}
+
+function render(){
+  tabsEl.querySelectorAll('.chip').forEach(b => {
+    b.classList.toggle('active', b.dataset.val === activeFilter);
+  });
+  const filtered = ENTRIES.filter(matches);
+  countEl.textContent = filtered.length + (filtered.length === 1 ? ' résultat' : ' résultats');
+  if(filtered.length === 0){
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  listEl.innerHTML = filtered.map(e => {
+    const key = e.a + '|' + e.d;
+    const isFav = favorites.has(key);
+    return `<li class="entry">
+      <div class="entry-main">
+        <div class="acro">${highlight(e.a, query)}</div>
+        <div class="def">${highlight(e.d, query)}</div>
+      </div>
+      <button class="fav-btn ${isFav ? 'active' : ''}" data-key="${escapeHtml(key)}" aria-label="Favori">${isFav ? '★' : '☆'}</button>
+    </li>`;
+  }).join('');
+  listEl.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.key;
+      if(favorites.has(key)) favorites.delete(key); else favorites.add(key);
+      saveFavs();
+      render();
+    });
+  });
+}
+
+function saveFavs(){
+  try{
+    localStorage.setItem('acromap_favs', JSON.stringify(Array.from(favorites)));
+  }catch(e){}
+}
+function loadFavs(){
+  try{
+    const raw = localStorage.getItem('acromap_favs');
+    if(raw) favorites = new Set(JSON.parse(raw));
+  }catch(e){}
+}
+
+searchEl.addEventListener('input', () => {
+  query = searchEl.value.trim();
+  clearBtn.style.display = query ? 'block' : 'none';
+  render();
+});
+clearBtn.addEventListener('click', () => {
+  searchEl.value = '';
+  query = '';
+  clearBtn.style.display = 'none';
+  searchEl.focus();
+  render();
+});
+
+// --- Jeu "Deviner un acronyme" ---
+const gameToggle = document.getElementById('gameToggle');
+const gameView = document.getElementById('gameView');
+const gameDef = document.getElementById('gameDef');
+const gameMasked = document.getElementById('gameMasked');
+const gameHint = document.getElementById('gameHint');
+const gameInput = document.getElementById('gameInput');
+const gameReveal = document.getElementById('gameReveal');
+const gameAnswer = document.getElementById('gameAnswer');
+const gameSelfScore = document.getElementById('gameSelfScore');
+const gameKnew = document.getElementById('gameKnew');
+const gameDidnt = document.getElementById('gameDidnt');
+const gameScore = document.getElementById('gameScore');
+const gameNext = document.getElementById('gameNext');
+const gameQuit = document.getElementById('gameQuit');
+const mainList = document.getElementById('list');
+const mainEmpty = document.getElementById('empty');
+const mainCount = document.getElementById('count');
+
+let score = 0, streak = 0, current = null, revealedMask = [];
+
+function isLetter(ch){
+  return /[A-Za-zÀ-ÖØ-öø-ÿ]/.test(ch);
+}
+
+function renderMasked(){
+  const text = current.d;
+  gameMasked.textContent = text.split('').map((ch, i) =>
+    isLetter(ch) ? (revealedMask[i] ? ch : '_') : ch
+  ).join('');
+  const hiddenLeft = revealedMask.filter((v, i) => isLetter(text[i]) && !v).length;
+  gameHint.disabled = hiddenLeft === 0;
+  gameHint.textContent = hiddenLeft === 0 ? '💡 Toutes les lettres sont visibles' : '💡 Indice (une lettre)';
+}
+
+function useHint(){
+  const text = current.d;
+  const hiddenIndices = [];
+  for(let i = 0; i < text.length; i++){
+    if(isLetter(text[i]) && !revealedMask[i]) hiddenIndices.push(i);
+  }
+  if(hiddenIndices.length === 0) return;
+  const pick = hiddenIndices[Math.floor(Math.random() * hiddenIndices.length)];
+  revealedMask[pick] = true;
+  renderMasked();
+}
+
+function newQuestion(){
+  current = ENTRIES[Math.floor(Math.random() * ENTRIES.length)];
+  gameDef.textContent = current.a;
+  revealedMask = new Array(current.d.length).fill(false);
+  renderMasked();
+  gameInput.value = '';
+  gameAnswer.style.display = 'none';
+  gameSelfScore.style.display = 'none';
+  gameReveal.style.display = 'inline-block';
+  gameNext.style.display = 'none';
+  gameScore.textContent = `Score : ${score}   ·   Série : ${streak}`;
+  gameInput.focus();
+}
+
+gameHint.addEventListener('click', useHint);
+
+gameReveal.addEventListener('click', () => {
+  gameAnswer.textContent = current.d;
+  gameAnswer.style.display = 'block';
+  gameSelfScore.style.display = 'flex';
+  gameReveal.style.display = 'none';
+});
+
+gameKnew.addEventListener('click', () => {
+  score++; streak++;
+  gameScore.textContent = `Score : ${score}   ·   Série : ${streak}`;
+  gameSelfScore.style.display = 'none';
+  gameNext.style.display = 'inline-block';
+});
+gameDidnt.addEventListener('click', () => {
+  streak = 0;
+  gameScore.textContent = `Score : ${score}   ·   Série : ${streak}`;
+  gameSelfScore.style.display = 'none';
+  gameNext.style.display = 'inline-block';
+});
+
+gameToggle.addEventListener('click', () => {
+  gameView.style.display = 'block';
+  mainList.style.display = 'none';
+  mainEmpty.style.display = 'none';
+  mainCount.style.display = 'none';
+  newQuestion();
+});
+gameQuit.addEventListener('click', () => {
+  gameView.style.display = 'none';
+  mainList.style.display = '';
+  mainCount.style.display = '';
+  render();
+});
+gameNext.addEventListener('click', newQuestion);
+
+loadFavs();
+buildTabs();
+render();
+</script>
+</body>
+</html>
